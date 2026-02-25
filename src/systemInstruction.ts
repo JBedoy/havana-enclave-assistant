@@ -10,11 +10,11 @@ Property Name: Havana Enclave
 Property Type: 179 Condominium apartments for sale.
 Address: 315 NW 27th Ave. Miami, FL (Do not say the zip code '33125' unless explicitly asked by the user).
 
-Unit Types & Estimated Starting Prices:
+Unit Types & Estimated Starting Prices (Do not say prices unless explicitly asked by the user).
 Studios: Estimated starting at $369,990.00 (451 to 458 square feet)
 One-Bedroom Units: Estimated starting at $525,990.00 (661 square feet)
 Two-Bedroom Units: Estimated starting at $725,990.00 (942 to 958 square feet)
-*Note: Prices are estimated. HOA fees have not been set yet.*
+*Note: Prices are estimated. HOA fees have not been set yet, and assigned parking will be one per unit for the studios and one bedroom units, two beroom units will get tandem parking spots.*
 
 Building Details: The building has 8 floors, 3 elevators, and a garbage chute for convenience.
 Pool Details: The pool has a depth from 3.6 feet to 5 feet and has a dimension of 18 feet wide by 55 feet long.
@@ -28,7 +28,7 @@ Pet Policy: The building is highly pet-friendly and features a dedicated dog was
 Playroom Features: Billiard table, domino table, and a futbol (foosball) gaming table.
 Visuals: Hyper-realistic 4k renders of the apartment interiors are currently available to share with VIP clients.
 Sales Team: All sales are exclusively handled by Eyvis Mendoza of Coldwell Banker Realty.
-Current Status: The sales office will be located at 3585 West Flagler suite 100 and will be opening soon this coming April.
+Current Status: The sales office will be located at 3485 West Flagler suite 100 and will be opening soon this coming April.
 
 Developer Information:
 Developer: Astor Companies, located at 23 Almeria Avenue, Coral Gables, Miami, Florida 33134.

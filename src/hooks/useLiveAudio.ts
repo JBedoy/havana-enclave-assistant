@@ -133,7 +133,13 @@ export function useLiveAudio() {
       await audioContext.audioWorklet.addModule(processorUrl);
 
       // 3. Setup Microphone
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        } 
+      });
       mediaStreamRef.current = stream;
       const source = audioContext.createMediaStreamSource(stream);
 

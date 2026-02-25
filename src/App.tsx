@@ -3,7 +3,7 @@ import { Mic, MicOff, Phone, PhoneOff, Loader2, AudioLines, Building2 } from 'lu
 import { useLiveAudio } from './hooks/useLiveAudio';
 
 export default function App() {
-  const { isConnected, isConnecting, isSpeaking, error, connect, disconnect } = useLiveAudio();
+  const { isConnected, isConnecting, isSpeaking, volume, error, connect, disconnect } = useLiveAudio();
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans flex flex-col items-center justify-center p-6">
@@ -34,7 +34,7 @@ export default function App() {
         <div className="p-8 flex flex-col items-center">
           
           {/* Status Indicator */}
-          <div className="h-32 flex items-center justify-center w-full mb-8">
+          <div className="h-40 flex items-center justify-center w-full mb-6">
             {isConnecting ? (
               <div className="flex flex-col items-center text-stone-400">
                 <Loader2 className="w-10 h-10 animate-spin mb-4" />
@@ -60,6 +60,23 @@ export default function App() {
                 <p className={`mt-6 text-sm font-medium transition-colors duration-300 ${isSpeaking ? 'text-emerald-600' : 'text-stone-500'}`}>
                   {isSpeaking ? 'Assistant is speaking...' : 'Listening...'}
                 </p>
+
+                {/* Audio Visualizer (User speaking) */}
+                <div className="h-8 mt-3 flex items-center justify-center gap-1.5 transition-opacity duration-300" style={{ opacity: isSpeaking ? 0 : 1 }}>
+                  {[0, 1, 2, 3, 4].map((i) => {
+                    const multiplier = [0.4, 0.8, 1, 0.8, 0.4][i];
+                    // Base height is 4px. Max height is 32px.
+                    // Volume is 0 to 1. We multiply by 80 to give it some scale.
+                    const height = Math.max(4, Math.min(32, volume * 80 * multiplier));
+                    return (
+                      <div
+                        key={i}
+                        className="w-1.5 bg-[#f7921e] rounded-full transition-all duration-75"
+                        style={{ height: `${height}px` }}
+                      />
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <div className="flex flex-col items-center text-stone-400">
@@ -102,6 +119,18 @@ export default function App() {
               </>
             )}
           </button>
+
+          {/* Website Link */}
+          <div className="mt-8 flex flex-col items-center gap-4 w-full">
+            <a 
+              href="https://www.havanaenclave.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-sm text-stone-500 hover:text-[#f7921e] transition-colors"
+            >
+              www.havanaenclave.com
+            </a>
+          </div>
           
         </div>
         

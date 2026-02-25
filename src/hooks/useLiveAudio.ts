@@ -70,12 +70,15 @@ export function useLiveAudio() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [volume, setVolume] = useState(0);
   
   const aiRef = useRef<GoogleGenAI | null>(null);
   const sessionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const processorNodeRef = useRef<AudioWorkletNode | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animationFrameRef = useRef<number>(0);
   const nextStartTimeRef = useRef<number>(0);
 
   const disconnect = useCallback(() => {
@@ -86,6 +89,11 @@ export function useLiveAudio() {
         }
       }).catch(console.error);
       sessionRef.current = null;
+    }
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = 0;
     }
 
     if (processorNodeRef.current) {
@@ -106,6 +114,7 @@ export function useLiveAudio() {
     setIsConnected(false);
     setIsConnecting(false);
     setIsSpeaking(false);
+    setVolume(0);
     nextStartTimeRef.current = 0;
   }, []);
 
@@ -134,6 +143,32 @@ export function useLiveAudio() {
       source.connect(processorNode);
       processorNode.connect(audioContext.destination); // Required to keep it running
 
+      // 4.5 Setup Analyser for Visualizer
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      source.connect(analyser);
+      analyserRef.current = analyser;
+
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      let lastUpdateTime = 0;
+      const updateVolume = (time: number) => {
+        if (!analyserRef.current) return;
+        animationFrameRef.current = requestAnimationFrame(updateVolume);
+
+        // Throttle to ~20fps for smooth but performant React updates
+        if (time - lastUpdateTime < 50) return;
+        lastUpdateTime = time;
+
+        analyserRef.current.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          sum += dataArray[i];
+        }
+        const avg = sum / dataArray.length;
+        setVolume(avg / 255); // Normalize to 0-1
+      };
+      animationFrameRef.current = requestAnimationFrame(updateVolume);
+
       // 5. Connect to Live API
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       aiRef.current = ai;
@@ -146,6 +181,7 @@ export function useLiveAudio() {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
           },
           systemInstruction: systemInstruction,
+          tools: [{ googleSearch: {} }],
         },
         callbacks: {
           onopen: () => {
@@ -159,7 +195,7 @@ export function useLiveAudio() {
                   turns: [
                     {
                       role: "user",
-                      parts: [{ text: "Hello! I just connected. Please greet me and introduce Havana Enclave." }]
+                      parts: [{ text: "Hello! I just connected. Please greet me." }]
                     }
                   ],
                   turnComplete: true
@@ -256,6 +292,7 @@ export function useLiveAudio() {
     isConnected,
     isConnecting,
     isSpeaking,
+    volume,
     error,
     connect,
     disconnect

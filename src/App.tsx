@@ -1,67 +1,9 @@
-import React, { useState } from 'react';
-import { Mic, MicOff, Phone, PhoneOff, Loader2, AudioLines, Building2, Download } from 'lucide-react';
+import React from 'react';
+import { Mic, MicOff, Phone, PhoneOff, Loader2, AudioLines, Building2 } from 'lucide-react';
 import { useLiveAudio } from './hooks/useLiveAudio';
-import JSZip from 'jszip';
-
-// Import raw file contents for the zip download
-import packageJson from '../package.json?raw';
-import viteConfig from '../vite.config.ts?raw';
-import indexHtml from '../index.html?raw';
-import mainTsx from './main.tsx?raw';
-import appTsx from './App.tsx?raw';
-import indexCss from './index.css?raw';
-import systemInstructionTs from './systemInstruction.ts?raw';
-import useLiveAudioTs from './hooks/useLiveAudio.ts?raw';
-import tsconfigJson from '../tsconfig.json?raw';
-import gitignore from '../.gitignore?raw';
 
 export default function App() {
   const { isConnected, isConnecting, isSpeaking, error, connect, disconnect } = useLiveAudio();
-  const [isZipping, setIsZipping] = useState(false);
-
-  const handleDownloadZip = async () => {
-    setIsZipping(true);
-    try {
-      const zip = new JSZip();
-      
-      // Add root files
-      zip.file('package.json', packageJson);
-      zip.file('vite.config.ts', viteConfig);
-      zip.file('index.html', indexHtml);
-      zip.file('tsconfig.json', tsconfigJson);
-      zip.file('.gitignore', gitignore);
-      zip.file('.env.example', 'GEMINI_API_KEY=your_api_key_here\n');
-      
-      // Add src files
-      zip.folder('src');
-      zip.file('src/main.tsx', mainTsx);
-      zip.file('src/App.tsx', appTsx);
-      zip.file('src/index.css', indexCss);
-      zip.file('src/systemInstruction.ts', systemInstructionTs);
-      
-      // Add hooks
-      zip.folder('src/hooks');
-      zip.file('src/hooks/useLiveAudio.ts', useLiveAudioTs);
-
-      // Generate the zip file
-      const blob = await zip.generateAsync({ type: 'blob' });
-      
-      // Trigger download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'havana-enclave-app.zip';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (err) {
-      console.error('Failed to generate zip', err);
-      alert('Failed to generate zip file. Please try again.');
-    } finally {
-      setIsZipping(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans flex flex-col items-center justify-center p-6">
@@ -159,20 +101,6 @@ export default function App() {
                 Start Conversation
               </>
             )}
-          </button>
-          
-          {/* Download Source Code Link */}
-          <button 
-            onClick={handleDownloadZip}
-            disabled={isZipping}
-            className="mt-6 text-xs text-stone-400 hover:text-[#f7921e] transition-colors underline underline-offset-2 flex items-center justify-center gap-1"
-          >
-            {isZipping ? (
-              <Loader2 className="w-3 h-3 animate-spin" />
-            ) : (
-              <Download className="w-3 h-3" />
-            )}
-            {isZipping ? 'Bundling Source Code...' : 'Download Source Code (.zip)'}
           </button>
           
         </div>

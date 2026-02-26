@@ -133,13 +133,26 @@ export function useLiveAudio() {
       await audioContext.audioWorklet.addModule(processorUrl);
 
       // 3. Setup Microphone
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        } 
-      });
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          } 
+        });
+      } catch (micError: any) {
+        console.error("Microphone error:", micError);
+        if (micError.name === 'NotAllowedError' || micError.name === 'PermissionDeniedError') {
+          throw new Error("Microphone access was denied. Please tap the 'aA' or lock icon in your address bar to allow access, then try again.");
+        } else if (micError.name === 'NotFoundError') {
+          throw new Error("No microphone found on this device.");
+        } else {
+          throw new Error("Could not access microphone. Please check your device settings.");
+        }
+      }
+      
       mediaStreamRef.current = stream;
       const source = audioContext.createMediaStreamSource(stream);
 

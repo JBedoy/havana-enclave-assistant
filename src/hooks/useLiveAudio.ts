@@ -140,6 +140,7 @@ export function useLiveAudio() {
             echoCancellation: true,
             noiseSuppression: true,
             autoGainControl: true,
+            channelCount: 1,
           } 
         });
       } catch (micError: any) {
@@ -214,7 +215,7 @@ export function useLiveAudio() {
                   turns: [
                     {
                       role: "user",
-                      parts: [{ text: "Hello! I just connected. Please greet me." }]
+                      parts: [{ text: "Greet me." }]
                     }
                   ],
                   turnComplete: true

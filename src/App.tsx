@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mic, MicOff, Phone, PhoneOff, Loader2, AudioLines, Building2 } from 'lucide-react';
+import { Mic, MicOff, Phone, PhoneOff, Loader2, AudioLines, Building2, AlertCircle } from 'lucide-react';
 import { useLiveAudio } from './hooks/useLiveAudio';
 
 export default function App() {
@@ -92,8 +92,10 @@ export default function App() {
 
           {/* Error Message */}
           {error && (
-            <div className="w-full p-4 mb-6 bg-red-50 text-red-700 text-sm rounded-xl border border-red-100 text-center">
-              {error}
+            <div className="w-full p-4 mb-6 bg-red-50 text-red-700 text-sm rounded-xl border border-red-200 text-center flex flex-col items-center gap-2">
+              <AlertCircle className="w-6 h-6 text-red-500 mb-1" />
+              <p className="font-semibold text-base">Microphone Access Needed</p>
+              <p>{error}</p>
             </div>
           )}
 
@@ -115,10 +117,16 @@ export default function App() {
             ) : (
               <>
                 <Phone className="w-5 h-5" />
-                Start Conversation
+                Allow Mic & Start
               </>
             )}
           </button>
+
+          {!isConnected && !isConnecting && !error && (
+            <p className="mt-4 text-xs text-stone-400 text-center px-4">
+              *You will be prompted to allow microphone access so the assistant can hear you.
+            </p>
+          )}
 
           {/* Website Link */}
           <div className="mt-8 flex flex-col items-center gap-4 w-full">

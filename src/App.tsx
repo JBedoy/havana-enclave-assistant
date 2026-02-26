@@ -38,7 +38,7 @@ export default function App() {
             {isConnecting ? (
               <div className="flex flex-col items-center text-stone-400">
                 <Loader2 className="w-10 h-10 animate-spin mb-4" />
-                <p className="text-sm font-medium">Connecting to Eyvis's Office...</p>
+                <p className="text-sm font-medium">Connecting to Havana Enclave Virtual Assistant...</p>
               </div>
             ) : isConnected ? (
               <div className="flex flex-col items-center">

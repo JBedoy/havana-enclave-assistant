@@ -80,6 +80,7 @@ export function useLiveAudio() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number>(0);
   const nextStartTimeRef = useRef<number>(0);
+  const activeSourcesRef = useRef<AudioBufferSourceNode[]>([]);
 
   const disconnect = useCallback(() => {
     if (sessionRef.current) {
@@ -100,6 +101,11 @@ export function useLiveAudio() {
       processorNodeRef.current.disconnect();
       processorNodeRef.current = null;
     }
+
+    activeSourcesRef.current.forEach(source => {
+      try { source.stop(); } catch (e) {}
+    });
+    activeSourcesRef.current = [];
 
     if (mediaStreamRef.current) {
       mediaStreamRef.current.getTracks().forEach(track => track.stop());
@@ -244,6 +250,12 @@ export function useLiveAudio() {
               // Handle interruption
               setIsSpeaking(false);
               nextStartTimeRef.current = 0;
+              
+              // Stop all currently playing audio chunks immediately
+              activeSourcesRef.current.forEach(source => {
+                try { source.stop(); } catch (e) {}
+              });
+              activeSourcesRef.current = [];
             }
           },
           onerror: (err) => {
@@ -292,7 +304,10 @@ export function useLiveAudio() {
       source.start(nextStartTimeRef.current);
       nextStartTimeRef.current += audioBuffer.duration;
       
+      activeSourcesRef.current.push(source);
+      
       source.onended = () => {
+        activeSourcesRef.current = activeSourcesRef.current.filter(s => s !== source);
         if (context.currentTime >= nextStartTimeRef.current - 0.1) {
           setIsSpeaking(false);
         }

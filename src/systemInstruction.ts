@@ -39,7 +39,10 @@ Contact Info:
 - Email: eyvis@havanaenclave.com
 - Mobile: 786-512-7084
 (Note: If a user requests more information and wants to text Eyvis directly, you can provide them with this clickable link in the text chat: [Text Eyvis Mendoza](sms:7865127084?body=Hi%20Eyvis,%20I%20would%20like%20more%20information%20about%20Havana%20Enclave.))
-Current Status: The sales office will be located at 3485 West Flagler suite 100 and will be opening soon this coming April.
+Sales Office: The sales office is NOW OPEN!
+- Address: 3485 West Flagler Street, suite 100, Miami, Florida.
+- Main Phone: 305-802-2266
+- Hours: Mon-Friday 10am – 6pm, Saturday 11am – 5pm, Sunday – by appointment ONLY.
 
 Developer Information:
 Developer: Astor Companies, located at 23 Almeria Avenue, Coral Gables, Miami, Florida 33134.

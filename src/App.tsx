@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff, Phone, PhoneOff, Loader2, AudioLines, Building2, AlertCircle, MessageSquare, Send } from 'lucide-react';
 import { useLiveAudio } from './hooks/useLiveAudio';
 import { useTextChat } from './hooks/useTextChat';
-import Markdown from 'react-markdown';
+import Markdown, { defaultUrlTransform } from 'react-markdown';
 
 export default function App() {
   const [mode, setMode] = useState<'voice' | 'text'>('voice');
@@ -200,7 +200,14 @@ export default function App() {
                         msg.text
                       ) : (
                         <div className="markdown-body prose prose-sm prose-stone max-w-none prose-a:text-[#f7921e] prose-a:font-semibold">
-                          <Markdown>{msg.text}</Markdown>
+                          <Markdown
+                            urlTransform={(value: string) => {
+                              if (value.startsWith('sms:')) return value;
+                              return defaultUrlTransform(value);
+                            }}
+                          >
+                            {msg.text}
+                          </Markdown>
                         </div>
                       )}
                     </div>
